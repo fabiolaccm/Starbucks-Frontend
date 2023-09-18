@@ -14,7 +14,6 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(request) {
-    console.log(JSON.stringify(request));
     return this.http.post(environment.apiURL+'/auth', request)
       .toPromise();
   }

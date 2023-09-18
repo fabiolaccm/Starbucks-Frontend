@@ -27,7 +27,6 @@ export class UserService {
   }
 
   createOrUpdateUser(user){
-    console.log("createOrUpdateUser: " + JSON.stringify(user));
     if (user.Id == null) {
       return this.http.post(environment.apiURL+'/users', user).toPromise();  
     }

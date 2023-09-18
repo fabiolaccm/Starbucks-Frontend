@@ -64,8 +64,6 @@ export class UserDetailComponent implements OnInit {
 
   onSubmit(form: NgForm){
     if(this.validateForm(form.value)){
-
-      console.log("form.value: " + JSON.stringify(form.value));
       this.userService.createOrUpdateUser(form.value)
       .then(res => {
         let msg = (form.value.Id) ?  "Actualizado Correctamente" : "Registrado Correctamente";

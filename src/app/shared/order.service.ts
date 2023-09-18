@@ -30,7 +30,7 @@ export class OrderService {
       })
     }
 
-    return this.http.post(environment.apiURL+'/Orders', request);
+    return this.http.post(environment.apiURL+'/Orders', request).toPromise();
   }
 
   getOrderList(){

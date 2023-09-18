@@ -6,6 +6,8 @@ import { AuthService } from '../shared/auth.service';
 import { OrderResumen } from '../shared/order-resumen.model';
 import { Order } from '../shared/order.model';
 import { UserService } from '../shared/user.service';
+import { MatDialog } from '@angular/material';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-orders',
@@ -20,7 +22,8 @@ export class OrdersComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router:Router,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private dialog:MatDialog) { }
 
   ngOnInit() {
     this.refreshList();
@@ -31,10 +34,8 @@ export class OrdersComponent implements OnInit {
       .then(res => {
         this.orderList = [];
         let response = res as OrderResumen[];
-        console.log(JSON.stringify(response));
         if (response.length > 0) {
           let currentUser = this.userService.getUserFromStorage();
-          console.log(currentUser.id);
           if (this.authService.isUser()) {
             this.orderList = response.filter(s => s.userId == currentUser.id);
             this.title = "Mis Ordenes";
@@ -50,30 +51,55 @@ export class OrdersComponent implements OnInit {
     this.router.navigate(['/order']);
   }
   onOrderDelete(id:number){
-    if(confirm('¿Está seguro que quiere eliminar esta orden?')){
-      this.service.deleteOrder(id).then(res =>{
-        this.refreshList();
-        this.toastr.success("Orden eliminada correctamente.", "Orden Eliminada");
-      });
-    }
+    
+    this.dialog
+    .open(ConfirmationDialogComponent, {
+      data: `¿Está seguro que quiere eliminar esta orden?`
+    })
+    .afterClosed()
+    .subscribe((confirmation: Boolean) => {
+      if (confirmation) {
+        this.service.deleteOrder(id).then(res =>{
+          this.refreshList();
+          this.toastr.success("Orden eliminada correctamente.", "Orden Eliminada");
+        });
+      }
+    });
+
   }
 
   executeOrder(id:string){
-    if(confirm('¿Está seguro que desea ejecutar esta orden?')){
-      this.service.executeOrder(id).then(res =>{
-        this.refreshList();
-        this.toastr.success("Orden ejecutada correctamente.", "Orden Ejecutada");
-      });
-    }
+    this.dialog
+    .open(ConfirmationDialogComponent, {
+      data: `¿Está seguro que desea ejecutar esta orden?`
+    })
+    .afterClosed()
+    .subscribe((confirmation: Boolean) => {
+      if (confirmation) {
+        this.service.executeOrder(id).then(res =>{
+          this.refreshList();
+          this.toastr.success("Orden ejecutada correctamente.", "Orden Ejecutada");
+        });
+      }
+    });
   }
 
   invoiceOrder(id:string) {
-    if(confirm('¿Está seguro que desea facturar esta orden?')){
-      this.service.invoiceOrder(id).then(res =>{
-        this.refreshList();
-        this.toastr.success("Orden facturada correctamente.", "Orden Facturada");
-      });
-    }
+
+    this.dialog
+    .open(ConfirmationDialogComponent, {
+      data: `¿Está seguro que desea facturar esta orden?`
+    })
+    .afterClosed()
+    .subscribe((confirmation: Boolean) => {
+      if (confirmation) {
+        this.service.invoiceOrder(id).then(res =>{
+          this.refreshList();
+          this.toastr.success("Orden facturada correctamente.", "Orden Facturada");
+        });
+      }
+    });
+
   }
 
 }

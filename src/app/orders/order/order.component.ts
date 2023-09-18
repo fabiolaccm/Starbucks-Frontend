@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../shared/auth.service';
 import { UserService } from 'src/app/shared/user.service';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-order',
@@ -25,8 +26,7 @@ export class OrderComponent implements OnInit {
     private dialog:MatDialog,
     private toastr: ToastrService, 
     private router: Router,
-    private userService: UserService,
-    private currentRoute: ActivatedRoute) { }
+    private userService: UserService) { }
 
   ngOnInit() {
     this.resetForm();
@@ -89,13 +89,31 @@ export class OrderComponent implements OnInit {
   }
 
   onSubmit(form: NgForm){
+
     if(this.validateForm())
     {
-      this.service.saveOrder().subscribe(res => {
-        this.resetForm();
-        this.toastr.success('Orden generada exitosamente', 'Orden generada.');
-        this.router.navigate(['/orders']);
+
+      this.dialog
+      .open(ConfirmationDialogComponent, {
+        data: `¿Crear la orden?`
       })
+      .afterClosed()
+      .subscribe((confirmation: Boolean) => {
+        if (confirmation) {
+          this.service.saveOrder().then(res => {
+            this.resetForm();
+            this.toastr.success('Orden generada exitosamente', 'Orden generada.');
+            this.router.navigate(['/orders']);
+          }).catch(error => {
+            if(error.status == 412) {
+              this.toastr.error(error.error.message, "Error");
+              return;
+            }
+            
+            this.toastr.error("Error desconocido", "Error");
+          })
+        }
+      });
     }
   }
 }

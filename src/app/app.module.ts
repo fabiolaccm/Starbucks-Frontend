@@ -21,6 +21,7 @@ import { SupervisorMenuComponent } from './orders/supervisor-menu/supervisor-men
 import { StockComponent } from './orders/stock/stock.component';
 import { StockItemComponent } from './orders/stock-item/stock-item.component';
 import { AdminMenuComponent } from './orders/admin-menu/admin-menu.component';
+import { ConfirmationDialogComponent } from './orders/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AdminMenuComponent } from './orders/admin-menu/admin-menu.component';
     SupervisorMenuComponent,
     StockComponent,
     StockItemComponent,
-    AdminMenuComponent
+    AdminMenuComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,7 @@ import { AdminMenuComponent } from './orders/admin-menu/admin-menu.component';
     HttpClientModule,
     ToastrModule.forRoot()
   ],
-  entryComponents:[OrderItemsComponent, UserDetailComponent, StockItemComponent],
+  entryComponents:[OrderItemsComponent, UserDetailComponent, StockItemComponent, ConfirmationDialogComponent],
   providers: [
     OrderService,
     {
