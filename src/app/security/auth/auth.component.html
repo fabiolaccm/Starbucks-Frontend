@@ -1,0 +1,27 @@
+<h5 class="display-6">Ingreso al sistema</h5>
+<hr>
+<form #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Usuario</label>
+                <div class="input-group">
+                    <input name="email" #username="ngModel" [(ngModel)]="formData.email" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Clave</label>
+                <div class="input-group">
+                    <input type="password" name="password" #Password="ngModel" [(ngModel)]="formData.password" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Ingresar </button>
+    </div>
+</form>

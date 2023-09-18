@@ -1,0 +1,25 @@
+<h5 class="display-6">Stock</h5>
+<hr>
+<table class="table table-hover">
+    <thead class="thead-light">
+        <th>Ingrediente</th>
+        <th>Stock Actual</th>
+        <th>Stock Alert (porcentaje)</th>
+        <th>Opcion</th>
+    </thead>
+    <tbody>
+        <tr *ngIf="ingredients.length == 0">
+            <td class="font-italic text-center" colspan="5">
+                No hay ingredientes.
+            </td>
+        </tr>
+        <tr *ngFor="let item of ingredients">
+            <th>{{item.name}}</th>
+            <td>{{item.quantityAvailable}}</td>
+            <td>{{item.stockAlert}}</td>
+            <td>
+                <a class="btn btn-sm btn-success text-white" (click)="updateStock(item.id)"><i class="fa fa-plus"></i> Editar</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

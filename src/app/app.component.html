@@ -1,0 +1,22 @@
+<div class="jumbotron jumbotron-fluid">
+    <h3 class="display-4 text-center"><img src="/assets/img/starbucks.png"  width="200" height="170"></h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+          <div class="row" *ngIf="authService.isAuthenticate()">
+            <hr>
+            <div class="col-md-7">
+              <div class="alert alert-primary col-md-12 h-60" role="alert">
+                <p> {{ getUserHeader() }}</p>
+              </div>
+            </div>
+            <div class="offset-md-3 col-md-2">
+              <button type="button" class="btn btn-outline-danger ml-1"  (click)="logOut()"><i class="fa fa-close"></i> Salir</button>
+            </div>
+          </div>
+          <hr>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+</div>
