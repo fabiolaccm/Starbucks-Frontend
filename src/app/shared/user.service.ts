@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from './user.model';
+import { User } from './models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
@@ -18,31 +18,32 @@ export class UserService {
     return this.http.get(environment.apiURL+'/provinces').toPromise();
   }
 
-  getUsers() : Promise<object> {
+  getUsers() {
     return this.http.get(environment.apiURL+'/users').toPromise();
   }
 
-  getUser(userId){
+  getUser(userId:string){
     return this.http.get(environment.apiURL+'/users/' + userId).toPromise();
   }
 
-  createOrUpdateUser(user){
-    if (user.Id == null) {
+  createOrUpdateUser(user: User) {
+    
+    if (user.id == '') {
       return this.http.post(environment.apiURL+'/users', user).toPromise();  
     }
-    return this.http.put(environment.apiURL+'/users/' + user.Id, user).toPromise();
+    return this.http.put(environment.apiURL+'/users/' + user.id, user).toPromise();
   }
 
-  deleteUser(userId) {
+  deleteUser(userId: string) {
     return this.http.delete(environment.apiURL+'/users/' + userId).toPromise();
   }
 
-  setUserStorage(target) {
+  setUserStorage(target: User) {
     localStorage.setItem("user", JSON.stringify(target));
   }
 
   getUserFromStorage() : User {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(localStorage.getItem("user") as string);
     return user as User;
   }
 }

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/auth.service';
-import { Login } from 'src/app/shared/login.model';
+import { Login } from 'src/app/shared/models/login.model';
 import { NgForm } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/shared/user.service';
-import { User } from 'src/app/shared/user.model';
+import { User } from 'src/app/shared/models/user.model';
+import { LoginResponse } from 'src/app/shared/models/login-response.model';
+import { catchError, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth',
@@ -14,13 +16,14 @@ import { User } from 'src/app/shared/user.model';
 })
 export class AuthComponent implements OnInit {
 
-  formData: Login;
+  formData: Login = new Login();
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService
+    ) { }
 
   ngOnInit() {
     this.formData = {
@@ -31,8 +34,14 @@ export class AuthComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     this.authService.login(form.value)
-      .then(resp => {
-        this.authService.setToken(resp['token']);
+    .pipe(
+      catchError((error) => {
+        this.toastr.error("Credenciales incorrectas", "Error");
+        return throwError(() => new Error('Ocurrió un error en la llamada a la API. Detalles: ' + error.message));
+      })
+    )
+    .subscribe((response: LoginResponse) => {
+        this.authService.setToken(response.token);
         let id = this.authService.getUserIdFromToken();
         this.userService.getUser(id)
           .then(userRes => {
@@ -51,10 +60,6 @@ export class AuthComponent implements OnInit {
               this.router.navigate(['/order']);
             }
           });
-      })
-      .catch(error => {
-        console.log(error);
-        this.toastr.error("Credenciales incorrectas", "Error");
       });
   }
 

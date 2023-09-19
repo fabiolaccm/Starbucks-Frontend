@@ -23,12 +23,16 @@ export class AppComponent implements OnInit {
     
   }
 
-  getUserHeader() {
-    let user = this.userService.getUserFromStorage();
-    return "| Name: " + user.name + " | Provincia: " + user.province.name + "    | Rol: " + user.role.name;
+  isAuthenticate(): boolean {
+    return this.authService.isAuthenticate();
   }
 
-  logOut() {
+  getUserHeader(): string {
+    let user = this.userService.getUserFromStorage();
+    return "| Name: " + user.name + " | Provincia: " + user. province.name + "    | Rol: " + user.role.name;
+  }
+
+  logOut(): void {
     this.authService.logout();
     this.router.navigate(['/']);
   }

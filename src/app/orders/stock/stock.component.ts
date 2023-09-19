@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Ingredient } from 'src/app/shared/ingredients.model';
-import { StockService } from '../../shared/stock.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
 import { StockItemComponent } from '../stock-item/stock-item.component';
+import { Ingredient } from 'src/app/shared/models/ingredient.model';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { StockService } from 'src/app/shared/stock.service';
 
 @Component({
   selector: 'app-stock',
@@ -15,10 +15,9 @@ export class StockComponent implements OnInit {
 
   constructor(private stockService: StockService,     
     private dialog:MatDialog) { 
-
   }
 
-  updateStock(ingredientId){
+  updateStock(ingredientId: string){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.disableClose = true;

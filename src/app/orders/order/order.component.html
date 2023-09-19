@@ -1,4 +1,4 @@
-<h5 class="display-6">Genere su Orden</h5>
+<h2 class="display-6"><b>Genere su Orden</b></h2>
 <hr>
 <form #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
     <div class="row">
@@ -9,7 +9,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">#</div>
                     </div>
-                    <input name="ClientName" #ClientName="ngModel" [(ngModel)]="service.formData.ClientName" class="form-control" readonly>
+                    <input name="ClientName" #ClientName="ngModel" [(ngModel)]="getOrderService().formData.clientName" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -19,9 +19,9 @@
             <div class="form-group">
                 <label>Forma de pago</label>
                 <select name="PaymentMethod" #PaymentMethod="ngModel" 
-                [(ngModel)]="service.formData.PMethod" 
+                [(ngModel)]="getOrderService().formData.pMethod" 
                 class="form-control"
-                [class.is-invalid]="!isValid && service.formData.PMethod==''"
+                [class.is-invalid]="!isValid && getOrderService().formData.pMethod==''"
                 >
                     <option value="">-Seleccionar-</option>
                     <option value="Efectivo">Efectivo</option>
@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label>Impuestos %</label>
                 <div class="input-group">
-                    <input name="Taxes" #Taxes="ngModel" [(ngModel)]="service.formData.Taxes" class="form-control" readonly>
+                    <input name="Taxes" #Taxes="ngModel" [(ngModel)]="getOrderService().formData.taxes" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">$</div>
                     </div>
-                    <input name="OrderTotal" #OrderTotal="ngModel" [(ngModel)]="service.formData.GTotal" class="form-control" readonly>
+                    <input name="OrderTotal" #OrderTotal="ngModel" [(ngModel)]="getOrderService().formData.gTotal" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -57,23 +57,23 @@
             <th>Cantidad</th>
             <th>Total</th>
             <th>
-                <a class="btn btn-sm btn-success text-white" (click)="AddOrEditOrderItem(null, service.formData.OrderID)"><i class="fa fa-plus"></i> Agregar</a>
+                <a class="btn btn-sm btn-success text-white" (click)="AddOrEditOrderItem(null, getOrderService().formData.orderID)"><i class="fa fa-plus"></i> Agregar</a>
             </th>
         </thead>
         <tbody>
-            <tr *ngIf="service.orderItems.length == 0" [class.text-danger]="!isValid && service.orderItems.length == 0">
+            <tr *ngIf="getOrderService().orderItems.length == 0" [class.text-danger]="!isValid && getOrderService().orderItems.length == 0">
                 <td class="font-italic text-center" colspan="5">
                     No se han seleccionado productos para esta orden.
                 </td>
             </tr>
-            <tr *ngFor="let item of service.orderItems; let i=index">
-                <td>{{item.ItemName}}</td>
-                <td>{{item.Price}}</td>
-                <td>{{item.Quantity}}</td>
-                <td>{{item.Total}}</td>
+            <tr *ngFor="let item of getOrderService().orderItems; let i=index">
+                <td>{{item.itemName}}</td>
+                <td>{{item.price}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.total}}</td>
                 <td>
-                    <a class="btn btn-sm btn-info text-white" (click)="AddOrEditOrderItem(i, service.formData.OrderID)"><i class="fa fa-pencil"></i></a>
-                    <a class="btn btn-sm btn-danger text-white ml-1" (click)="onDeleteOrderItem(item.OrderItemID, i)"><i class="fa fa-trash"></i></a>
+                    <a class="btn btn-sm btn-info text-white" (click)="AddOrEditOrderItem(i, getOrderService().formData.orderID)"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-sm btn-danger text-white ml-1" (click)="onDeleteOrderItem(i)"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
         </tbody>

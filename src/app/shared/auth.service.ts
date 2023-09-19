@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import jwtDecode from 'jwt-decode';
 import { environment } from 'src/environments/environment';
+import { LoginResponse } from './models/login-response.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(request) {
-    return this.http.post(environment.apiURL+'/auth', request)
-      .toPromise();
+  login(request:any) : Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(environment.apiURL+'/auth', request);
   }
 
   logout() {
@@ -37,13 +38,13 @@ export class AuthService {
   }
 
   getRolesFromToken(): string {
-    let token = localStorage.getItem(this.tokenKey);
+    let token = localStorage.getItem(this.tokenKey) as string;
     const decodedToken: any = jwtDecode(token);
     return decodedToken["role"] || null;
   }
 
   getUserIdFromToken() : string {
-    let token = localStorage.getItem(this.tokenKey);
+    let token = localStorage.getItem(this.tokenKey) as string;
     const decodedToken: any = jwtDecode(token);
     return decodedToken["id"] || null;
   }
@@ -67,5 +68,4 @@ export class AuthService {
   isAuthenticate(): boolean {
     return this.authenticate  || this.getToken() != null;
   }
-
 }

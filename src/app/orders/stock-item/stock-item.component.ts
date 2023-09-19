@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { StockService } from '../../shared/stock.service';
-import { Ingredient } from 'src/app/shared/ingredients.model';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Ingredient } from 'src/app/shared/models/ingredient.model';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-stock-item',
@@ -12,9 +12,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class StockItemComponent implements OnInit {
 
-  formData: Ingredient;
+  formData: Ingredient = new Ingredient();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
       private stockService: StockService,
       private dialog:MatDialog,
       public dialogRef: MatDialogRef<StockItemComponent>,
@@ -22,13 +22,7 @@ export class StockItemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formData = {
-      id: '',
-      name: '',
-      quantityAvailable: 0,
-      stockAlert: 0
-    };
-
+    this.formData = new Ingredient();
     this.stockService.findOne(this.data.ingredientId)
     .then(res => {
       this.formData = res as Ingredient;

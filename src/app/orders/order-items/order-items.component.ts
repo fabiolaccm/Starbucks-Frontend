@@ -1,12 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { OrderItem } from 'src/app/shared/order-item.model';
-import { ItemService } from 'src/app/shared/item.service';
-import { Item } from 'src/app/shared/item.model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NgForm } from '@angular/forms';
+import { OrderItem } from 'src/app/shared/models/order-item.model';
+import { MenuItem } from 'src/app/shared/models/menuItem.model';
+
 import { OrderService } from 'src/app/shared/order.service';
 import { MenuService } from '../../shared/menu.service';
-import { MenuItem } from 'src/app/shared/menuItem.model';
 
 @Component({
   selector: 'app-order-items',
@@ -14,18 +13,17 @@ import { MenuItem } from 'src/app/shared/menuItem.model';
   styles: []
 })
 export class OrderItemsComponent implements OnInit {
-  formData: OrderItem;
+  formData: OrderItem = new OrderItem();
 
-  items: MenuItem[];
-  item: MenuItem = null;
+  items: MenuItem[] = [];
+  item: MenuItem = new MenuItem();
   isValid:boolean = true;
   viewDetailProduct: boolean = false;
   lastIndexProductSelected: number = 0;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<OrderItemsComponent>,
-    private itemService:ItemService,
     private orderService: OrderService,
     private menuService: MenuService) { }
 
@@ -36,33 +34,29 @@ export class OrderItemsComponent implements OnInit {
         this.items = res as MenuItem[];
       });
 
-    if(this.data.orderItemIndex == null)
-      this.formData = {
-        OrderItemID: null,
-        OrderID: this.data.OrderID,
-        ItemID: 0,
-        ItemName: '',
-        Price: 0,
-        Quantity: 0,
-        Total: 0
-      }
-    else
+    if(this.data.orderItemIndex == null) {
+      this.formData = new OrderItem();
+      this.formData.orderID = this.data.OrderID;
+    }   
+    else {
       this.formData = Object.assign({}, this.orderService.orderItems[this.data.orderItemIndex]);
+    }
+      
   }
 
-  updatePrice(ctrl){
+  updatePrice(ctrl: any){
     this.lastIndexProductSelected = ctrl.selectedIndex;
     if(ctrl.selectedIndex == 0){
-      this.formData.Price = 0;
-      this.formData.ItemName = '';
-      this.formData.Quantity = 0;
-      this.item = null;
+      this.formData.price = 0;
+      this.formData.itemName = '';
+      this.formData.quantity = 0;
+      this.item = new MenuItem();
     }
     else
     {
-      this.formData.Quantity = 0;
-      this.formData.Price = this.items[ctrl.selectedIndex-1].price;
-      this.formData.ItemName = this.items[ctrl.selectedIndex-1].name;
+      this.formData.quantity = 0;
+      this.formData.price = this.items[ctrl.selectedIndex-1].price;
+      this.formData.itemName = this.items[ctrl.selectedIndex-1].name;
       this.item = this.items[ctrl.selectedIndex - 1];
     }
     this.viewDetailProduct = false;
@@ -78,7 +72,7 @@ export class OrderItemsComponent implements OnInit {
   }
 
   updateTotal(){
-    this.formData.Total = parseFloat((this.formData.Quantity*this.formData.Price).toFixed(2));
+    this.formData.total = parseFloat((this.formData.quantity*this.formData.price).toFixed(2));
   }
 
   onSubmit(form: NgForm){
@@ -93,9 +87,9 @@ export class OrderItemsComponent implements OnInit {
 
   validateForm(formData:OrderItem){
     this.isValid = true;
-    if(formData.ItemID == 0)
+    if(formData.itemID == 0)
     this.isValid = false;
-    else if(formData.Quantity == 0)
+    else if(formData.quantity == 0)
     this.isValid = false;
     return this.isValid;
   }
